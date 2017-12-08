@@ -29,7 +29,6 @@
 
     <activity
         android:name=".ui.step.StepDetailActivity"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
         android:launchMode="singleTop"
         android:theme="@style/AppTheme.NoActionBar" />
     <activity
