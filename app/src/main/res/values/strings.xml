@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Baking App</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="content_description_approval_icon">Approval Icon</string>
     <string name="content_description_recipe_image_thumbnail">Recipe Image Thumbnail</string>

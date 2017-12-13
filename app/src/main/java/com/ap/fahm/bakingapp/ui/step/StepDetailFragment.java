@@ -1,5 +1,5 @@
 /*
- * Copyright 2017.  FahmApps.com
+ * Copyright 2018.  FahmApps.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class StepDetailFragment extends Fragment implements ExoPlayer.EventListener {
+    private static String TABLET_KEY = "TABLET_KEY";
+    public static final String STEP_KEY = "STEP_KEY";
+    public static final String VIDEO_KEY = "VIDEO_KEY";
 
     private static MediaSessionCompat mMediaSession;
     @BindView(R.id.tv_step_short_description)
@@ -79,6 +82,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     @BindView(R.id.ll_container)
     LinearLayout llContainer;
     private Step step;
+
     private boolean isTablet;
     private SimpleExoPlayer mExoPlayer;
     private PlaybackStateCompat.Builder mStateBuilder;
@@ -92,8 +96,8 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     public static StepDetailFragment newInstance(Step step, boolean isTablet) {
         StepDetailFragment stepDetailFragment = new StepDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("step", step);
-        bundle.putBoolean("isTablet", isTablet);
+        bundle.putParcelable(STEP_KEY, step);
+        bundle.putBoolean(TABLET_KEY, isTablet);
         stepDetailFragment.setArguments(bundle);
 
         return stepDetailFragment;
@@ -129,6 +133,18 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        if (savedInstanceState != null) {
+            currentVideoPosition = savedInstanceState.getLong(VIDEO_KEY,0);
+        }
+        step = getArguments().getParcelable(STEP_KEY);
+        isTablet = getArguments().getBoolean(TABLET_KEY);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putLong(VIDEO_KEY, currentVideoPosition);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -138,9 +154,6 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         View view = inflater.inflate(R.layout.fragment_step_detail, container, false);
         ButterKnife.bind(this, view);
 
-        if (getArguments() != null) {
-            step = getArguments().getParcelable("step");
-            isTablet = getArguments().getBoolean("isTablet");
             if (step != null) {
                 tvStepShortDescription.setText(step.getShortDescription());
                 tvStepDescription.setText(step.getDescription());
@@ -190,11 +203,18 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
                     }
                 }
             }
-        }
+
 
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
     @Override
     public void onPause() {
         super.onPause();
@@ -209,6 +229,13 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     public void onResume() {
         super.onResume();
         initializePlayer();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
     }
 
     private void initializePlayer() {
@@ -347,4 +374,6 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.red_700));
         snackbar.show();
     }
+
+
 }
