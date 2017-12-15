@@ -14,3 +14,5 @@ I build this as part of Udacity Associate Android Developer Fast Track program i
   - [Glide](https://github.com/bumptech/glide)
   - [GlidePalette](https://github.com/florent37/GlidePalette)
   - [AVLoadingIndicatorView](https://github.com/81813780/AVLoadingIndicatorView)
+  - [Exo MediaPlayer](https://github.com/google/ExoPlayer)
+  
